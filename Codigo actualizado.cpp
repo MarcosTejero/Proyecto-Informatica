@@ -312,20 +312,25 @@ void calcularMediaPorEmbalse(Embalse* embalses, int nEmbalses) {
     for (int i = 0; i < totalNombres; i++) free(nombres[i]);
     free(nombres);
 }
-void calcularEvolucionAguaEstancada(Embalse* embalses, int nEmbalses) {
+void calcularEvolucionAguaEstancada(Embalse* embalses, int nEmbalses) 
+{
     int capacidad = 10;
     int totalNombres = 0;
     char** nombres = (char**)malloc(capacidad * sizeof(char*));
 
-    for (int i = 0; i < nEmbalses; i++) {
+    for (int i = 0; i < nEmbalses; i++) 
+	{
         int existe = 0;
-        for (int j = 0; j < totalNombres; j++) {
-            if (strcmp(nombres[j], embalses[i].embalse) == 0) {
+        for (int j = 0; j < totalNombres; j++) 
+		{
+            if (strcmp(nombres[j], embalses[i].embalse) == 0) 
+			{
                 existe = 1;
                 break;
             }
         }
-        if (!existe) {
+        if (!existe) 
+		{
             if (totalNombres == capacidad) {
                 capacidad *= 2;
                 nombres = (char**)realloc(nombres, capacidad * sizeof(char*));
@@ -341,7 +346,8 @@ void calcularEvolucionAguaEstancada(Embalse* embalses, int nEmbalses) {
 
     int seleccion = 0;
     printf("Selecciona el número del embalse: ");
-    if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalNombres) {
+    if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalNombres) 
+	{
         printf("Selección no válida.\n");
         while (getchar() != '\n');
         return;
@@ -355,14 +361,17 @@ void calcularEvolucionAguaEstancada(Embalse* embalses, int nEmbalses) {
     int volumenTotalPorAnio[10] = {0};
 
     for (int i = 0; i < nEmbalses; i++) {
-        if (strcmp(embalses[i].embalse, embalseElegido) == 0) {
-            for (int j = 0; j < embalses[i].nVolumenes; j++) {
+        if (strcmp(embalses[i].embalse, embalseElegido) == 0) 
+		{
+            for (int j = 0; j < embalses[i].nVolumenes; j++) 
+			{
                 volumenTotalPorAnio[j] += embalses[i].volumen[j];
             }
         }
     }
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) 
+	{
         printf("Año %d: %d hectómetros cúbicos\n", anios[i], volumenTotalPorAnio[i]);
     }
 
@@ -371,8 +380,10 @@ void calcularEvolucionAguaEstancada(Embalse* embalses, int nEmbalses) {
 }
 
 
-void liberarDatos(Embalse* embalses, int nEmbalses) {
-    for (int i = 0; i < nEmbalses; i++) {
+void liberarDatos(Embalse* embalses, int nEmbalses) 
+{
+    for (int i = 0; i < nEmbalses; i++) 
+	{
         free(embalses[i].cuenca);
         free(embalses[i].embalse);
         free(embalses[i].mes);
@@ -388,8 +399,18 @@ int main() {
     int nEmbalses = 0;
     int nVolumenes = 0;
     char nombreFichero[256];
-
-    printf("Introduce el nombre del fichero CSV (por ejemplo: dataset.csv): ");
+    
+    //Bienvenida al codigo
+    printf("¡ BIENVENIDO AL PROGRAMA DE ANÁLISIS DE DATOS DE MITECO ! ----> CuencaStast \n");
+    printf("\n Hemos registrado los datos relativos a los volúmenes de agua almacenada, en los embalses españoles, agrupados por cuencas hidrográficas.\n");
+    printf("\n Y a partir de este programa, creado por :\n ");
+    printf("\n 1-Marcos Tejero Monedero \n");
+    printf("\n 2-Miguel Martínez-Lacaci \n");
+    printf("\n 3-Juan Moreno Aymerich \n");
+    printf("\n 4-Manuel López Romera \n");
+    printf("\n Podrás elegir diferentes opciones, para estudiar este conjunto de datos, de manera exacta y efectiva. \n");
+    printf(" \n ¿Estás listo? \n");
+    printf("\n \n Para ello, deberás de introducir el nombre del fichero CSV que le hemos proporcinado (dataset.csv): ");
     fgets(nombreFichero, sizeof(nombreFichero), stdin);
     nombreFichero[strcspn(nombreFichero, "\n")] = 0;
 
@@ -400,22 +421,25 @@ int main() {
     }
 
     printf("Archivo cargado correctamente (%d registros).\n", nEmbalses);
+    printf("\n -------¡BIENVENIDO!------ \n");
     mostrarDatos(embalses, nEmbalses);
 
     char continuar = 's';
-    while (continuar == 's' || continuar == 'S') {
+    while (continuar == 's' || continuar == 'S') 
+	{
         int opcion;
         printf("\n=== MENÚ DE OPCIONES ===\n");
         printf("1. Calcular media mensual por cuenca\n");
         printf("2. Calcular media anual por cuenca\n");
-        printf("3. Calcular media por embalse\n");
+        printf("3. Calcular media (Anual o Mensual) por embalse\n");
         printf("4. Calcular evolucion del agua estancada a lo largo del tiempo\n");
         printf("5. Salir\n");
         printf("Selecciona una opcion: ");
         scanf("%d", &opcion);
         getchar();
 
-        switch (opcion) {
+        switch (opcion) 
+		{
             case 1:
                 calcularMediaMensualPorCuenca(embalses, nEmbalses);
                 break;
