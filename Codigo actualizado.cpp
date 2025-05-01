@@ -320,18 +320,64 @@ void calcularMediaPorEmbalse(Embalse* embalses, int nEmbalses) {
     for (int i = 0; i < totalNombres; i++) free(nombres[i]);
     free(nombres);
 }
-void calcularEvolucionAguaEstancada(Embalse* embalses, int nEmbalses) {//añadida falta quizas especificar según cada estanque
-    printf("\n=== EVOLUCIÓN DEL AGUA ESTANCADA ===\n");
+void calcularEvolucionAguaEstancada(Embalse* embalses, int nEmbalses) {
+    int capacidad = 10;
+    int totalNombres = 0;
+    char** nombres = (char**)malloc(capacidad * sizeof(char*));
 
     for (int i = 0; i < nEmbalses; i++) {
-        int suma = 0;
-        for (int j = 0; j < embalses[i].nVolumenes; j++) {
-            suma += embalses[i].volumen[j];
+        int existe = 0;
+        for (int j = 0; j < totalNombres; j++) {
+            if (strcmp(nombres[j], embalses[i].embalse) == 0) {
+                existe = 1;
+                break;
+            }
         }
-        printf("%s (%s - %s): Total acumulado = %d\n",
-               embalses[i].cuenca, embalses[i].embalse, embalses[i].mes, suma);
+        if (!existe) {
+            if (totalNombres == capacidad) {
+                capacidad *= 2;
+                nombres = (char**)realloc(nombres, capacidad * sizeof(char*));
+            }
+            nombres[totalNombres++] = strdup(embalses[i].embalse);
+        }
     }
+
+    printf("\n=== LISTA DE EMBALSES DISPONIBLES ===\n");
+    for (int i = 0; i < totalNombres; i++) {
+        printf("%d. %s\n", i + 1, nombres[i]);
+    }
+
+    int seleccion = 0;
+    printf("Selecciona el número del embalse: ");
+    if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalNombres) {
+        printf("Selección no válida.\n");
+        while (getchar() != '\n');
+        return;
+    }
+    getchar();
+
+    char* embalseElegido = nombres[seleccion - 1];
+
+    printf("\n=== EVOLUCIÓN ANUAL DEL AGUA ESTANCADA PARA '%s' ===\n", embalseElegido);
+    int anios[10] = {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021};
+    int volumenTotalPorAnio[10] = {0};
+
+    for (int i = 0; i < nEmbalses; i++) {
+        if (strcmp(embalses[i].embalse, embalseElegido) == 0) {
+            for (int j = 0; j < embalses[i].nVolumenes; j++) {
+                volumenTotalPorAnio[j] += embalses[i].volumen[j];
+            }
+        }
+    }
+
+    for (int i = 0; i < 10; i++) {
+        printf("Año %d: %d hectómetros cúbicos\n", anios[i], volumenTotalPorAnio[i]);
+    }
+
+    for (int i = 0; i < totalNombres; i++) free(nombres[i]);
+    free(nombres);
 }
+
 
 void liberarDatos(Embalse* embalses, int nEmbalses) {
     for (int i = 0; i < nEmbalses; i++) {
