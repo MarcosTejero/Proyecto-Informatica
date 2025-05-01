@@ -217,29 +217,21 @@ void calcularMediaAnualPorCuenca(Embalse* embalses, int nEmbalses) {
     }
     getchar();
 
-    int suma = 0, contador = 0;
+    int anioIndex = anio - 2012;
+    int suma = 0, entradas = 0;
 
     for (int i = 0; i < nEmbalses; i++) {
-        if (strcmp(embalses[i].cuenca, cuencaSeleccionada) == 0) {
-            // Extraer el año si el formato es MM-YYYY
-            char* guion = strchr(embalses[i].mes, '-');
-            if (guion && strlen(guion + 1) == 4) {
-                int anioExtraido = atoi(guion + 1);
-                if (anioExtraido == anio) {
-                    for (int j = 0; j < embalses[i].nVolumenes; j++) {
-                        suma += embalses[i].volumen[j];
-                        contador++;
-                    }
-                }
-            }
+        if (strcmp(embalses[i].cuenca, cuencaSeleccionada) == 0 && anioIndex < embalses[i].nVolumenes) {
+            suma += embalses[i].volumen[anioIndex];
+            entradas++;
         }
     }
 
-    if (contador == 0) {
+    if (entradas == 0) {
         printf("No se encontraron datos para la cuenca '%s' en el año %d.\n", cuencaSeleccionada, anio);
     } else {
-        float media = (float)suma / contador;
-        printf("Media anual de la cuenca '%s' en %d: %.2f\n", cuencaSeleccionada, anio, media);
+        float media = (float)suma / entradas;
+        printf("Media anual de la cuenca '%s' en %d: %.2f hectómetros cúbicos\n", cuencaSeleccionada, anio, media);
     }
 
     for (int i = 0; i < totalCuencas; i++) {
