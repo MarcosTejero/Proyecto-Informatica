@@ -320,6 +320,18 @@ void calcularMediaPorEmbalse(Embalse* embalses, int nEmbalses) {
     for (int i = 0; i < totalNombres; i++) free(nombres[i]);
     free(nombres);
 }
+void calcularEvolucionAguaEstancada(Embalse* embalses, int nEmbalses) {//añadida falta quizas especificar según cada estanque
+    printf("\n=== EVOLUCIÓN DEL AGUA ESTANCADA ===\n");
+
+    for (int i = 0; i < nEmbalses; i++) {
+        int suma = 0;
+        for (int j = 0; j < embalses[i].nVolumenes; j++) {
+            suma += embalses[i].volumen[j];
+        }
+        printf("%s (%s - %s): Total acumulado = %d\n",
+               embalses[i].cuenca, embalses[i].embalse, embalses[i].mes, suma);
+    }
+}
 
 void liberarDatos(Embalse* embalses, int nEmbalses) {
     for (int i = 0; i < nEmbalses; i++) {
@@ -358,9 +370,10 @@ int main() {
         printf("\n=== MENÚ DE OPCIONES ===\n");
         printf("1. Calcular media mensual por cuenca\n");
         printf("2. Calcular media anual por cuenca\n");
-        printf("3. Calcular media mensual o anual por embalse\n");
-        printf("4. Salir\n");
-        printf("Selecciona una opción: ");
+        printf("3. Calcular media por embalse\n");
+        printf("4. Calcular evolucion del agua estancada a lo largo del tiempo\n");
+        printf("5. Salir\n");
+        printf("Selecciona una opcion: ");
         scanf("%d", &opcion);
         getchar();
 
@@ -375,14 +388,18 @@ int main() {
                 calcularMediaPorEmbalse(embalses, nEmbalses);
                 break;
             case 4:
+                calcularEvolucionAguaEstancada(embalses, nEmbalses);
+                break;
+            case 5:
                 liberarDatos(embalses, nEmbalses);
                 printf("Programa finalizado.\n");
+                system("pause");
                 return 0;
             default:
                 printf("Opción no válida.\n");
         }
 
-        printf("\n¿Deseas ejecutar otra función?: ");
+        printf("\n¿Deseas ejecutar otra funcion?: ");
         scanf(" %c", &continuar);
         getchar();
     }
