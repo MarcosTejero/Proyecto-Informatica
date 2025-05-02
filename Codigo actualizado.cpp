@@ -83,16 +83,7 @@ Embalse* cargarDatos(const char* nombreFichero, int* nEmbalses, int* nVolumenes)
     return embalses;
 }
 
-void mostrarDatos(Embalse* embalses, int nEmbalses) {
-    printf("\n=== REGISTROS CARGADOS (primeros 5) ===\n\n");
-    for (int i = 0; i < nEmbalses && i < 5; i++) {
-        printf("%s - %s - %s: ", embalses[i].cuenca, embalses[i].embalse, embalses[i].mes);
-        for (int j = 0; j < embalses[i].nVolumenes; j++) {
-            printf("%d ", embalses[i].volumen[j]);
-        }
-        printf("\n");
-    }
-}
+
 
 void calcularMediaMensualPorCuenca(Embalse* embalses, int nEmbalses) {
     int capacidad = 10;
@@ -422,7 +413,7 @@ int main() {
 
     printf("Archivo cargado correctamente (%d registros).\n", nEmbalses);
     printf("\n -------¡BIENVENIDO!------ \n");
-    mostrarDatos(embalses, nEmbalses);
+   
 
     char continuar = 's';
     while (continuar == 's' || continuar == 'S') 
