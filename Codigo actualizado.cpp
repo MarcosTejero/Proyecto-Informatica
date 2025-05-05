@@ -394,12 +394,12 @@ void detectarAnomalias(Embalse* embalses, int nEmbalses, int nVolumenes) {
 
     printf("\n=== LISTA DE EMBALSES DISPONIBLES ===\n");
     for (int i = 0; i < totalEmbalses; i++) {
-        printf("%d. %s\n", i + 1, cuenca[i]);
+        printf("%d. %s\n", i + 1, nombresEmbalses[i]);
     }
 
-    int seleccionCuenca;
-    printf("Selecciona el número del embalse: ");
-    if (scanf("%d", &seleccionEmbalse) != 1 || seleccionEmbalse < 1 || seleccionEmbalse > totalEmbalses) {
+    int seleccion;
+    printf("Selecciona el número del embalse para detectar anomalías: ");
+    if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalEmbalses) {
         printf("Selección no válida.\n");
         while (getchar() != '\n');
         for (int i = 0; i < totalEmbalses; i++) free(nombresEmbalses[i]);
