@@ -371,29 +371,80 @@ void calcularEvolucionAguaEstancada(Embalse* embalses, int nEmbalses)
 }
 
 void detectarAnomalias(Embalse* embalses, int nEmbalses, int nVolumenes) {
-   int ANIO_INICIO=2012;
-    const float UMBRAL = 0.30f;
-    printf("\n=== CAMBIOS NOTABLES DETECTADOS (>%d%%) ===\n", (int)(UMBRAL*100));
+    int capacidad = 10;
+    int totalEmbalses = 0;
+    char** nombresEmbalses = (char**)malloc(capacidad * sizeof(char*));
+
     for (int i = 0; i < nEmbalses; i++) {
-        for (int j = 1; j < nVolumenes; j++) {
-            int ant = embalses[i].volumen[j-1];
-            int act = embalses[i].volumen[j];
-            if (ant > 0) {
-                float diff = (act - ant) / (float)ant;
-                if (labs(diff)>UMBRAL) {
-                    printf("⚠ %s - %s (%s): %d→%d entre %d y %d (%.1f%%)\n",
-                        embalses[i].cuenca,
-                        embalses[i].embalse,
-                        embalses[i].mes,
-                        ant, act,
-                        ANIO_INICIO + j - 1,
-                        ANIO_INICIO + j,
-                        diff * 100);
+        int existe = 0;
+        for (int j = 0; j < totalEmbalses; j++) {
+            if (strcmp(nombresEmbalses[j], embalses[i].embalse) == 0) {
+                existe = 1;
+                break;
+            }
+        }
+        if (!existe) {
+            if (totalEmbalses == capacidad) {
+                capacidad *= 2;
+                nombresEmbalses = (char**)realloc(nombresEmbalses, capacidad * sizeof(char*));
+            }
+            nombresEmbalses[totalEmbalses++] = strdup(embalses[i].embalse);
+        }
+    }
+
+    printf("\n=== LISTA DE EMBALSES DISPONIBLES ===\n");
+    for (int i = 0; i < totalEmbalses; i++) {
+        printf("%d. %s\n", i + 1, cuenca[i]);
+    }
+
+    int seleccionCuenca;
+    printf("Selecciona el número del embalse: ");
+    if (scanf("%d", &seleccionEmbalse) != 1 || seleccionEmbalse < 1 || seleccionEmbalse > totalEmbalses) {
+        printf("Selección no válida.\n");
+        while (getchar() != '\n');
+        for (int i = 0; i < totalEmbalses; i++) free(nombresEmbalses[i]);
+        free(nombresEmbalses);
+        return;
+    }
+    getchar();
+    char* embalseSeleccionado = nombresEmbalses[seleccion - 1];
+
+    int ANIO_INICIO = 2012;
+    const float UMBRAL = 0.30f;
+    printf("\n=== CAMBIOS NOTABLES DETECTADOS (>%.0f%%) PARA '%s' ===\n", UMBRAL * 100, embalseSeleccionado);
+
+    int encontrado = 0;
+    for (int i = 0; i < nEmbalses; i++) {
+        if (strcmp(embalses[i].embalse, embalseSeleccionado) == 0) {
+            for (int j = 1; j < nVolumenes; j++) {
+                int ant = embalses[i].volumen[j - 1];
+                int act = embalses[i].volumen[j];
+                if (ant > 0) {
+                    float diff = (act - ant) / (float)ant;
+                    if (labs(diff) > UMBRAL) {
+                        printf("⚠ %s - %s (%s): %d → %d entre %d y %d (%.1f%%)\n",
+                            embalses[i].cuenca,
+                            embalses[i].embalse,
+                            embalses[i].mes,
+                            ant, act,
+                            ANIO_INICIO + j - 1,
+                            ANIO_INICIO + j,
+                            diff * 100);
+                        encontrado = 1;
+                    }
                 }
             }
         }
     }
+
+    if (!encontrado) {
+        printf("No se detectaron anomalías para el embalse '%s'.\n", embalseSeleccionado);
+    }
+
+    for (int i = 0; i < totalEmbalses; i++) free(nombresEmbalses[i]);
+    free(nombresEmbalses);
 }
+
 
 void liberarDatos(Embalse* embalses, int nEmbalses) 
 {
@@ -448,7 +499,7 @@ int main() {
         printf("2. Calcular media anual por cuenca\n");
         printf("3. Calcular media (Anual o Mensual) por embalse\n");
         printf("4. Calcular evolucion del agua estancada a lo largo del tiempo\n");
-	printf("5. Detectar periodos anómalos")
+	printf("5. Detectar periodos anómalos");
         printf("6. Salir\n");
         printf("Selecciona una opcion: ");
         scanf("%d", &opcion);
@@ -469,7 +520,7 @@ int main() {
                 calcularEvolucionAguaEstancada(embalses, nEmbalses);
                 break;
              case 5:
-            	detectarAnomalias(embalses, nEmbalses);
+            	detectarAnomalias(embalses, nEmbalses, nVolumenes);
             	break;
             case 6:
                 liberarDatos(embalses, nEmbalses);
