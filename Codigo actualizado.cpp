@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
+#include <math.h>
+
+
 
 typedef struct {
     char* cuenca;
@@ -542,6 +545,148 @@ void calcularModa(Embalse* embalses, int nEmbalses) {
     free(valores);
 }
 
+void calcularDesviacionTipica(Embalse* embalses, int nEmbalses) {
+    int capacidad = 10;
+    int totalNombres = 0;
+    char** nombres = (char**)malloc(capacidad * sizeof(char*));
+
+    for (int i = 0; i < nEmbalses; i++) {
+        int existe = 0;
+        for (int j = 0; j < totalNombres; j++) {
+            if (strcmp(nombres[j], embalses[i].embalse) == 0) {
+                existe = 1;
+                break;
+            }
+        }
+        if (!existe) {
+            if (totalNombres == capacidad) {
+                capacidad *= 2;
+                nombres = (char**)realloc(nombres, capacidad * sizeof(char*));
+            }
+            nombres[totalNombres++] = strdup(embalses[i].embalse);
+        }
+    }
+
+    printf("\n=== LISTA DE EMBALSES DISPONIBLES ===\n");
+    for (int i = 0; i < totalNombres; i++) {
+        printf("%d. %s\n", i + 1, nombres[i]);
+    }
+
+    int seleccion = 0;
+    printf("Selecciona el número del embalse para calcular la desviacion tipica: ");
+    if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalNombres) {
+        printf("Selección no valida.\n");
+        while (getchar() != '\n');
+        return;
+    }
+    getchar();
+    char* embalseElegido = nombres[seleccion - 1];
+    int suma = 0, entradas = 0;
+    for (int i = 0; i < nEmbalses; i++) {
+        if (strcmp(embalses[i].embalse, embalseElegido) == 0) {
+            for (int j = 0; j < embalses[i].nVolumenes; j++) {
+                suma += embalses[i].volumen[j];
+                entradas++;
+            }
+        }
+    }
+    if (entradas == 0) {
+        printf("No se encontraron datos para ese embalse.\n");
+        for (int i = 0; i < totalNombres; i++) free(nombres[i]);
+        free(nombres);
+        return;
+    }
+    float media = (float)suma / entradas;
+    float sumaCuadrados = 0.0;
+    for (int i = 0; i < nEmbalses; i++) {
+        if (strcmp(embalses[i].embalse, embalseElegido) == 0) {
+            for (int j = 0; j < embalses[i].nVolumenes; j++) {
+                float diff = embalses[i].volumen[j] - media;
+                sumaCuadrados += diff * diff;
+            }
+        }
+    }
+    float desviacionTipica = sqrt(sumaCuadrados / entradas);
+
+    printf("Desviación típica del embalse '%s': %.2f hectometros cubicos\n",
+           embalseElegido, desviacionTipica);
+
+    for (int i = 0; i < totalNombres; i++) free(nombres[i]);
+    free(nombres);
+}
+void calcularDesviacionTipicaPorCuenca(Embalse* embalses, int nEmbalses) {
+    int capacidad = 10;
+    int totalCuencas = 0;
+    char** cuencas = (char**)malloc(capacidad * sizeof(char*));
+
+    for (int i = 0; i < nEmbalses; i++) {
+        int existe = 0;
+        for (int j = 0; j < totalCuencas; j++) {
+            if (strcmp(cuencas[j], embalses[i].cuenca) == 0) {
+                existe = 1;
+                break;
+            }
+        }
+        if (!existe) {
+            if (totalCuencas == capacidad) {
+                capacidad *= 2;
+                cuencas = (char**)realloc(cuencas, capacidad * sizeof(char*));
+            }
+            cuencas[totalCuencas++] = strdup(embalses[i].cuenca);
+        }
+    }
+
+    printf("\n=== LISTA DE CUENCAS DISPONIBLES ===\n");
+    for (int i = 0; i < totalCuencas; i++) {
+        printf("%d. %s\n", i + 1, cuencas[i]);
+    }
+
+    int seleccion = 0;
+    printf("Selecciona el número de la cuenca para calcular la desviación típica: ");
+    if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalCuencas) {
+        printf("Selección no válida.\n");
+        while (getchar() != '\n');
+        return;
+    }
+    getchar();
+    char* cuencaElegida = cuencas[seleccion - 1];
+    int suma = 0, entradas = 0;
+    for (int i = 0; i < nEmbalses; i++) {
+        if (strcmp(embalses[i].cuenca, cuencaElegida) == 0) {
+            for (int j = 0; j < embalses[i].nVolumenes; j++) {
+                suma += embalses[i].volumen[j];
+                entradas++;
+            }
+        }
+    }
+    if (entradas == 0) {
+        printf("No se encontraron datos para esa cuenca.\n");
+        for (int i = 0; i < totalCuencas; i++) free(cuencas[i]);
+        free(cuencas);
+        return;
+    }
+    float media = (float)suma / entradas;
+    float sumaCuadrados = 0.0;
+    for (int i = 0; i < nEmbalses; i++) {
+        if (strcmp(embalses[i].cuenca, cuencaElegida) == 0) {
+            for (int j = 0; j < embalses[i].nVolumenes; j++) {
+                float diff = embalses[i].volumen[j] - media;
+                sumaCuadrados += diff * diff;
+            }
+        }
+    }
+
+    // Paso 3 y 4: Dividir entre entradas y sacar raíz cuadrada
+    float desviacionTipica = sqrt(sumaCuadrados / entradas);
+
+    printf("Desviación típica de la cuenca '%s': %.2f hectómetros cúbicos\n",
+           cuencaElegida, desviacionTipica);
+
+    for (int i = 0; i < totalCuencas; i++) free(cuencas[i]);
+    free(cuencas);
+}
+
+
 void liberarDatos(Embalse* embalses, int nEmbalses) 
 {
     for (int i = 0; i < nEmbalses; i++) 
@@ -597,7 +742,9 @@ int main() {
         printf("4. Calcular evolucion del agua estancada a lo largo del tiempo\n");
 	printf("5. Detectar periodos anómalos\n");
 	printf("6. Calcular moda por embalse\n");
-        printf("7. Salir\n");
+        printf("7. Calcular desviacion tipica por embalse\n");
+        printf("8.Calcular desviacion tipica por cuenca\n");
+        printf("9.Salir\n");
         printf("Selecciona una opcion: ");
         scanf("%d", &opcion);
         getchar();
@@ -621,9 +768,15 @@ int main() {
             	break;
 	    case 6:
 		calcularModa(embalses, nEmbalses);
-		break;
+	      	break;
             case 7:
-                liberarDatos(embalses, nEmbalses);
+                calcularDesviacionTipica(embalses, nEmbalses);
+                break;
+            case 8:
+		calcularDesviacionTipicaPorCuenca(embalses, nEmbalses);
+		break;
+            case 9:
+		liberarDatos(embalses, nEmbalses);
                 printf("Programa finalizado.\n");
                 system("pause");
                 return 0;
