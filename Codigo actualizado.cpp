@@ -306,7 +306,7 @@ void calcularMediaPorEmbalse(Embalse* embalses, int nEmbalses) {
     for (int i = 0; i < totalNombres; i++) free(nombres[i]);
     free(nombres);
 }
-void calcularEvolucionAguaEstancada(Embalse* embalses, int nEmbalses) 
+void Evolucion_de_agua_estancada(Embalse* embalses, int nEmbalses) 
 {
     int capacidad = 10;
     int totalNombres = 0;
@@ -401,9 +401,9 @@ void detectarAnomalias(Embalse* embalses, int nEmbalses, int nVolumenes) {
     }
 
     int seleccion;
-    printf("Selecciona el número del embalse para detectar anomalías: ");
+    printf("Selecciona el numero del embalse para detectar anomalias: ");
     if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalEmbalses) {
-        printf("Selección no válida.\n");
+        printf("Seleccion no valida.\n");
         while (getchar() != '\n');
         for (int i = 0; i < totalEmbalses; i++) free(nombresEmbalses[i]);
         free(nombresEmbalses);
@@ -441,7 +441,7 @@ void detectarAnomalias(Embalse* embalses, int nEmbalses, int nVolumenes) {
     }
 
     if (!encontrado) {
-        printf("No se detectaron anomalías para el embalse '%s'.\n", embalseSeleccionado);
+        printf("No se detectaron anomalias para el embalse '%s'.\n", embalseSeleccionado);
     }
 
     for (int i = 0; i < totalEmbalses; i++) free(nombresEmbalses[i]);
@@ -476,9 +476,9 @@ void calcularModa(Embalse* embalses, int nEmbalses) {
     }
 
     int seleccion = 0;
-    printf("Selecciona el número del embalse: ");
+    printf("Selecciona el numero del embalse: ");
     if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalNombres) {
-        printf("Selección no válida.\n");
+        printf("Seleccion no valida.\n");
         while (getchar() != '\n');
         for (int i = 0; i < totalNombres; i++) free(nombres[i]);
         free(nombres);
@@ -534,7 +534,7 @@ void calcularModa(Embalse* embalses, int nEmbalses) {
         printf("Moda del embalse '%s':\n", embalseElegido);
         for (int i = 0; i < nValores; i++) {
             if (frecuencias[i] == maxFrecuencia) {
-                printf("- %d hectómetros cúbicos (repetido %d veces)\n", valores[i], frecuencias[i]);
+                printf("- %d hectometros cubicos (repetido %d veces)\n", valores[i], frecuencias[i]);
             }
         }
     }
@@ -545,7 +545,7 @@ void calcularModa(Embalse* embalses, int nEmbalses) {
     free(valores);
 }
 
-void calcularDesviacionTipica(Embalse* embalses, int nEmbalses) {
+void Desviaciontipica(Embalse* embalses, int nEmbalses) {
     int capacidad = 10;
     int totalNombres = 0;
     char** nombres = (char**)malloc(capacidad * sizeof(char*));
@@ -573,9 +573,9 @@ void calcularDesviacionTipica(Embalse* embalses, int nEmbalses) {
     }
 
     int seleccion = 0;
-    printf("Selecciona el número del embalse para calcular la desviacion tipica: ");
+    printf("Selecciona el numero del embalse para calcular la desviacion tipica: ");
     if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalNombres) {
-        printf("Selección no valida.\n");
+        printf("Seleccion no valida.\n");
         while (getchar() != '\n');
         return;
     }
@@ -608,13 +608,13 @@ void calcularDesviacionTipica(Embalse* embalses, int nEmbalses) {
     }
     float desviacionTipica = sqrt(sumaCuadrados / entradas);
 
-    printf("Desviación típica del embalse '%s': %.2f hectometros cubicos\n",
+    printf("Desviacion tipica del embalse '%s': %.2f hectometros cubicos\n",
            embalseElegido, desviacionTipica);
 
     for (int i = 0; i < totalNombres; i++) free(nombres[i]);
     free(nombres);
 }
-void calcularDesviacionTipicaPorCuenca(Embalse* embalses, int nEmbalses) {
+void Desviaciontipicaporcuenca(Embalse* embalses, int nEmbalses) {
     int capacidad = 10;
     int totalCuencas = 0;
     char** cuencas = (char**)malloc(capacidad * sizeof(char*));
@@ -675,11 +675,8 @@ void calcularDesviacionTipicaPorCuenca(Embalse* embalses, int nEmbalses) {
             }
         }
     }
-
-    // Paso 3 y 4: Dividir entre entradas y sacar raíz cuadrada
     float desviacionTipica = sqrt(sumaCuadrados / entradas);
-
-    printf("Desviación típica de la cuenca '%s': %.2f hectómetros cúbicos\n",
+    printf("Desviacion tipica de la cuenca '%s': %.2f hectometros cubicos\n",
            cuencaElegida, desviacionTipica);
 
     for (int i = 0; i < totalCuencas; i++) free(cuencas[i]);
@@ -708,22 +705,22 @@ int main() {
     char nombreFichero[256];
     
     //Bienvenida al codigo
-    printf("¡ BIENVENIDO AL PROGRAMA DE ANÁLISIS DE DATOS DE MITECO ! ----> CuencaStast \n");
-    printf("\n Hemos registrado los datos relativos a los volúmenes de agua almacenada, en los embalses españoles, agrupados por cuencas hidrográficas.\n");
+    printf("¡ BIENVENIDO AL PROGRAMA DE ANALISIS DE DATOS DE MITECO ! ----> CuencaStast \n");
+    printf("\n Hemos registrado los datos relativos a los volumenes de agua almacenada, en los embalses espanoles, agrupados por cuencas hidrograficas.\n");
     printf("\n Y a partir de este programa, creado por :\n ");
     printf("\n 1-Marcos Tejero Monedero \n");
-    printf("\n 2-Miguel Martínez-Lacaci \n");
+    printf("\n 2-Miguel Martinez-Lacaci \n");
     printf("\n 3-Juan Moreno Aymerich \n");
-    printf("\n 4-Manuel López Romera \n");
-    printf("\n Podrás elegir diferentes opciones, para estudiar este conjunto de datos, de manera exacta y efectiva. \n");
-    printf(" \n ¿Estás listo? \n");
-    printf("\n \n Para ello, deberás de introducir el nombre del fichero CSV que le hemos proporcinado (dataset.csv): ");
+    printf("\n 4-Manuel Lopez Romera \n");
+    printf("\n Podras elegir diferentes opciones, para estudiar este conjunto de datos, de manera exacta y efectiva. \n");
+    printf(" \n ¿Estas listo? \n");
+    printf("\n \n Para ello, deberas de introducir el nombre del fichero CSV que le hemos proporcinado (dataset.csv): ");
     fgets(nombreFichero, sizeof(nombreFichero), stdin);
     nombreFichero[strcspn(nombreFichero, "\n")] = 0;
 
     embalses = cargarDatos(nombreFichero, &nEmbalses, &nVolumenes);
     if (!embalses) {
-        printf("No se pudo abrir el archivo o está vacío.\n");
+        printf("No se pudo abrir el archivo o está vacio.\n");
         return 1;
     }
 
@@ -740,11 +737,11 @@ int main() {
         printf("2. Calcular media anual por cuenca\n");
         printf("3. Calcular media (Anual o Mensual) por embalse\n");
         printf("4. Calcular evolucion del agua estancada a lo largo del tiempo\n");
-	printf("5. Detectar periodos anómalos\n");
-	printf("6. Calcular moda por embalse\n");
+	    printf("5. Detectar periodos anomalos\n");
+ 	    printf("6. Calcular moda por embalse\n");
         printf("7. Calcular desviacion tipica por embalse\n");
-        printf("8.Calcular desviacion tipica por cuenca\n");
-        printf("9.Salir\n");
+        printf("8. Calcular desviacion tipica por cuenca\n");
+        printf("9. Salir\n");
         printf("Selecciona una opcion: ");
         scanf("%d", &opcion);
         getchar();
@@ -761,7 +758,7 @@ int main() {
                 calcularMediaPorEmbalse(embalses, nEmbalses);
                 break;
             case 4:
-                calcularEvolucionAguaEstancada(embalses, nEmbalses);
+                Evolucion_de_agua_estancada(embalses, nEmbalses);
                 break;
             case 5:
             	detectarAnomalias(embalses, nEmbalses, nVolumenes);
@@ -770,10 +767,10 @@ int main() {
 		calcularModa(embalses, nEmbalses);
 	      	break;
             case 7:
-                calcularDesviacionTipica(embalses, nEmbalses);
+                Desviaciontipica(embalses, nEmbalses);
                 break;
             case 8:
-		calcularDesviacionTipicaPorCuenca(embalses, nEmbalses);
+		Desviaciontipicaporcuenca(embalses, nEmbalses);
 		break;
             case 9:
 		liberarDatos(embalses, nEmbalses);
@@ -781,7 +778,7 @@ int main() {
                 system("pause");
                 return 0;
             default:
-                printf("Opción no válida.\n");
+                printf("Opcion no valida.\n");
         }
 
         printf("\n¿Deseas ejecutar otra funcion?: ");
@@ -793,3 +790,4 @@ int main() {
     printf("Programa finalizado.\n");
     return 0;
 }
+
