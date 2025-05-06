@@ -120,7 +120,7 @@ void calcularMediaMensualPorCuenca(Embalse* embalses, int nEmbalses) {
     int seleccionCuenca;
     printf("Selecciona el número de la cuenca: ");
     if (scanf("%d", &seleccionCuenca) != 1 || seleccionCuenca < 1 || seleccionCuenca > totalCuencas) {
-        printf("Selección no válida.\n");
+        printf("Seleccion no valida.\n");
         while (getchar() != '\n');
         return;
     }
@@ -129,7 +129,7 @@ void calcularMediaMensualPorCuenca(Embalse* embalses, int nEmbalses) {
     char* cuencaBuscada = cuencas[seleccionCuenca - 1];
 
     int mesBuscado;
-    printf("Introduce el número del mes (1-12): ");
+    printf("Introduce el numero del mes (1-12): ");
     if (scanf("%d", &mesBuscado) != 1 || mesBuscado < 1 || mesBuscado > 12) {
         printf("Mes no válido.\n");
         while (getchar() != '\n');
@@ -225,7 +225,7 @@ void calcularMediaAnualPorCuenca(Embalse* embalses, int nEmbalses) {
         printf("No se encontraron datos para la cuenca '%s' en el año %d.\n", cuencaSeleccionada, anio);
     } else {
         float media = (float)suma / entradas;
-        printf("Media anual de la cuenca '%s' en %d: %.2f hectómetros cúbicos\n", cuencaSeleccionada, anio, media);
+        printf("Media anual de la cuenca '%s' en %d: %.2f hectometros cubicos\n", cuencaSeleccionada, anio, media);
     }
 
     for (int i = 0; i < totalCuencas; i++) {
