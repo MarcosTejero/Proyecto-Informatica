@@ -445,6 +445,102 @@ void detectarAnomalias(Embalse* embalses, int nEmbalses, int nVolumenes) {
     free(nombresEmbalses);
 }
 
+void calcularModa(Embalse* embalses, int nEmbalses) {
+    int capacidad = 10;
+    int totalNombres = 0;
+    char** nombres = (char**)malloc(capacidad * sizeof(char*));
+
+    for (int i = 0; i < nEmbalses; i++) {
+        int existe = 0;
+        for (int j = 0; j < totalNombres; j++) {
+            if (strcmp(nombres[j], embalses[i].embalse) == 0) {
+                existe = 1;
+                break;
+            }
+        }
+        if (!existe) {
+            if (totalNombres == capacidad) {
+                capacidad *= 2;
+                nombres = (char**)realloc(nombres, capacidad * sizeof(char*));
+            }
+            nombres[totalNombres++] = strdup(embalses[i].embalse);
+        }
+    }
+
+    printf("\n=== LISTA DE EMBALSES DISPONIBLES ===\n");
+    for (int i = 0; i < totalNombres; i++) {
+        printf("%d. %s\n", i + 1, nombres[i]);
+    }
+
+    int seleccion = 0;
+    printf("Selecciona el número del embalse: ");
+    if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalNombres) {
+        printf("Selección no válida.\n");
+        while (getchar() != '\n');
+        for (int i = 0; i < totalNombres; i++) free(nombres[i]);
+        free(nombres);
+        return;
+    }
+    getchar();
+
+    char* embalseElegido = nombres[seleccion - 1];
+
+    int* frecuencias = NULL;
+    int* valores = NULL;
+    int nValores = 0;
+    int capacidadValores = 100;
+
+    frecuencias = (int*)malloc(capacidadValores * sizeof(int));
+    valores = (int*)malloc(capacidadValores * sizeof(int));
+
+    for (int i = 0; i < nEmbalses; i++) {
+        if (strcmp(embalses[i].embalse, embalseElegido) == 0) {
+            for (int j = 0; j < embalses[i].nVolumenes; j++) {
+                int encontrado = 0;
+                for (int k = 0; k < nValores; k++) {
+                    if (valores[k] == embalses[i].volumen[j]) {
+                        frecuencias[k]++;
+                        encontrado = 1;
+                        break;
+                    }
+                }
+                if (!encontrado) {
+                    if (nValores == capacidadValores) {
+                        capacidadValores *= 2;
+                        valores = (int*)realloc(valores, capacidadValores * sizeof(int));
+                        frecuencias = (int*)realloc(frecuencias, capacidadValores * sizeof(int));
+                    }
+                    valores[nValores] = embalses[i].volumen[j];
+                    frecuencias[nValores] = 1;
+                    nValores++;
+                }
+            }
+        }
+    }
+
+    if (nValores == 0) {
+        printf("No se encontraron datos para ese embalse.\n");
+    } else {
+        int maxFrecuencia = 0;
+        for (int i = 0; i < nValores; i++) {
+            if (frecuencias[i] > maxFrecuencia) {
+                maxFrecuencia = frecuencias[i];
+            }
+        }
+
+        printf("Moda del embalse '%s':\n", embalseElegido);
+        for (int i = 0; i < nValores; i++) {
+            if (frecuencias[i] == maxFrecuencia) {
+                printf("- %d hectómetros cúbicos (repetido %d veces)\n", valores[i], frecuencias[i]);
+            }
+        }
+    }
+
+    for (int i = 0; i < totalNombres; i++) free(nombres[i]);
+    free(nombres);
+    free(frecuencias);
+    free(valores);
+}
 
 void liberarDatos(Embalse* embalses, int nEmbalses) 
 {
@@ -499,8 +595,9 @@ int main() {
         printf("2. Calcular media anual por cuenca\n");
         printf("3. Calcular media (Anual o Mensual) por embalse\n");
         printf("4. Calcular evolucion del agua estancada a lo largo del tiempo\n");
-	printf("5. Detectar periodos anómalos");
-        printf("6. Salir\n");
+	printf("5. Detectar periodos anómalos\n");
+	printf("6. Calcular moda por embalse\n");
+        printf("7. Salir\n");
         printf("Selecciona una opcion: ");
         scanf("%d", &opcion);
         getchar();
@@ -519,10 +616,13 @@ int main() {
             case 4:
                 calcularEvolucionAguaEstancada(embalses, nEmbalses);
                 break;
-             case 5:
+            case 5:
             	detectarAnomalias(embalses, nEmbalses, nVolumenes);
             	break;
-            case 6:
+	    case 6:
+		calcularModa(embalses, nEmbalses);
+		break;
+            case 7:
                 liberarDatos(embalses, nEmbalses);
                 printf("Programa finalizado.\n");
                 system("pause");
