@@ -683,6 +683,61 @@ void Desviaciontipicaporcuenca(Embalse* embalses, int nEmbalses) {
     free(cuencas);
 }
 
+void sumarVolumenTotalPorEmbalse(Embalse* embalses, int nEmbalses) {
+    int capacidad = 10;
+    int totalEmbalses = 0;
+    char** nombresEmbalses = (char**)malloc(capacidad * sizeof(char*));
+
+    for (int i = 0; i < nEmbalses; i++) {
+        int existe = 0;
+        for (int j = 0; j < totalEmbalses; j++) {
+            if (strcmp(nombresEmbalses[j], embalses[i].embalse) == 0) {
+                existe = 1;
+                break;
+            }
+        }
+        if (!existe) {
+            if (totalEmbalses == capacidad) {
+                capacidad *= 2;
+                nombresEmbalses = (char**)realloc(nombresEmbalses, capacidad * sizeof(char*));
+            }
+            nombresEmbalses[totalEmbalses++] = strdup(embalses[i].embalse);
+        }
+    }
+
+    printf("\n=== LISTA DE EMBALSES DISPONIBLES ===\n");
+    for (int i = 0; i < totalEmbalses; i++) {
+        printf("%d. %s\n", i + 1, nombresEmbalses[i]);
+    }
+
+    int seleccion;
+    printf("Selecciona el embalse: ");
+    if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalEmbalses) {
+        printf("Selección no válida.\n");
+        while (getchar() != '\n');
+        return;
+    }
+    getchar();
+    char* embalseSeleccionado = nombresEmbalses[seleccion - 1];
+
+    long sumaTotal = 0;
+
+    for (int i = 0; i < nEmbalses; i++) {
+        if (strcmp(embalses[i].embalse, embalseSeleccionado) == 0) {
+            for (int j = 0; j < embalses[i].nVolumenes; j++) {
+                sumaTotal += embalses[i].volumen[j];
+            }
+        }
+    }
+
+    printf("El volumen acumulado total del embalse '%s' es: %ld \n", embalseSeleccionado, sumaTotal);
+
+    for (int i = 0; i < totalEmbalses; i++) {
+        free(nombresEmbalses[i]);
+    }
+    free(nombresEmbalses);
+}
+
 
 void liberarDatos(Embalse* embalses, int nEmbalses) 
 {
@@ -737,11 +792,12 @@ int main() {
         printf("2. Calcular media anual por cuenca\n");
         printf("3. Calcular media (Anual o Mensual) por embalse\n");
         printf("4. Calcular evolucion del agua estancada a lo largo del tiempo\n");
-	    printf("5. Detectar periodos anomalos\n");
- 	    printf("6. Calcular moda por embalse\n");
+	printf("5. Detectar periodos anomalos\n");
+ 	printf("6. Calcular moda por embalse\n");
         printf("7. Calcular desviacion tipica por embalse\n");
         printf("8. Calcular desviacion tipica por cuenca\n");
-        printf("9. Salir\n");
+	printf("9. Volumen total acumulado por embalse\n");
+        printf("10. Salir\n");
         printf("Selecciona una opcion: ");
         scanf("%d", &opcion);
         getchar();
@@ -773,6 +829,9 @@ int main() {
 		Desviaciontipicaporcuenca(embalses, nEmbalses);
 		break;
             case 9:
+		sumarVolumenTotalPorEmbalse(embalses, nEmbalses);
+		break;
+	    case 10:
 		liberarDatos(embalses, nEmbalses);
                 printf("Programa finalizado.\n");
                 system("pause");
