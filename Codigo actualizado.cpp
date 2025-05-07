@@ -118,7 +118,7 @@ void calcularMediaMensualPorCuenca(Embalse* embalses, int nEmbalses) {
     }
 
     int seleccionCuenca;
-    printf("Selecciona el número de la cuenca: ");
+    printf("Selecciona el numero de la cuenca: ");
     if (scanf("%d", &seleccionCuenca) != 1 || seleccionCuenca < 1 || seleccionCuenca > totalCuencas) {
         printf("Seleccion no valida.\n");
         while (getchar() != '\n');
@@ -131,7 +131,7 @@ void calcularMediaMensualPorCuenca(Embalse* embalses, int nEmbalses) {
     int mesBuscado;
     printf("Introduce el numero del mes (1-12): ");
     if (scanf("%d", &mesBuscado) != 1 || mesBuscado < 1 || mesBuscado > 12) {
-        printf("Mes no válido.\n");
+        printf("Mes no valido.\n");
         while (getchar() != '\n');
         return;
     }
@@ -155,7 +155,7 @@ void calcularMediaMensualPorCuenca(Embalse* embalses, int nEmbalses) {
         printf("No se encontraron datos para esa cuenca y mes.\n");
     } else {
         float media = (float)suma / contador;
-        printf("Media para la cuenca '%s' en el mes %d: %.2f\n", cuencaBuscada, mesBuscado, media);
+        printf("Media para la cuenca '%s' en el mes %d: %.2f\n hectometros cubicos", cuencaBuscada, mesBuscado, media);
     }
 
     for (int i = 0; i < totalCuencas; i++) {
@@ -195,7 +195,7 @@ void calcularMediaAnualPorCuenca(Embalse* embalses, int nEmbalses) {
     int seleccion;
     printf("Selecciona la cuenca: ");
     if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalCuencas) {
-        printf("Selección no válida.\n");
+        printf("Selección no valida.\n");
         while (getchar() != '\n');
         return;
     }
@@ -203,9 +203,9 @@ void calcularMediaAnualPorCuenca(Embalse* embalses, int nEmbalses) {
     char* cuencaSeleccionada = cuencas[seleccion - 1];
 
     int anio;
-    printf("Introduce el año (2012 a 2021): ");
+    printf("Introduce el anio (2012 a 2021): ");
     if (scanf("%d", &anio) != 1 || anio < 2012 || anio > 2021) {
-        printf("Año fuera de rango.\n");
+        printf("Anio fuera de rango.\n");
         while (getchar() != '\n');
         return;
     }
@@ -222,7 +222,7 @@ void calcularMediaAnualPorCuenca(Embalse* embalses, int nEmbalses) {
     }
 
     if (entradas == 0) {
-        printf("No se encontraron datos para la cuenca '%s' en el año %d.\n", cuencaSeleccionada, anio);
+        printf("No se encontraron datos para la cuenca '%s' en el anio %d.\n", cuencaSeleccionada, anio);
     } else {
         float media = (float)suma / entradas;
         printf("Media anual de la cuenca '%s' en %d: %.2f hectometros cubicos\n", cuencaSeleccionada, anio, media);
@@ -265,9 +265,9 @@ void calcularMediaPorEmbalse(Embalse* embalses, int nEmbalses) {
     }
 
     int seleccion = 0;
-    printf("Selecciona el número del embalse: ");
+    printf("Selecciona el numero del embalse: ");
     if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalNombres) {
-        printf("Selección no válida.\n");
+        printf("Seleccion no valida.\n");
         while (getchar() != '\n');
         return;
     }
@@ -278,7 +278,7 @@ void calcularMediaPorEmbalse(Embalse* embalses, int nEmbalses) {
     int tipoMedia = 0;
     printf("¿Deseas calcular la media mensual (1) o media anual (2)? ");
     if (scanf("%d", &tipoMedia) != 1 || (tipoMedia != 1 && tipoMedia != 2)) {
-        printf("Opción no válida.\n");
+        printf("Opción no valida.\n");
         while (getchar() != '\n');
         return;
     }
@@ -299,7 +299,7 @@ void calcularMediaPorEmbalse(Embalse* embalses, int nEmbalses) {
         printf("No se encontraron datos para ese embalse.\n");
     } else {
         float media = (float)suma / entradas;
-        printf("Media %s del embalse '%s': %.2f\n",
+        printf("Media %s del embalse '%s': %.2f\n hectometros cubicos",
                tipoMedia == 1 ? "mensual" : "anual", embalseElegido, media);
     }
 
@@ -339,10 +339,10 @@ void Evolucion_de_agua_estancada(Embalse* embalses, int nEmbalses)
     }
 
     int seleccion = 0;
-    printf("Selecciona el número del embalse: ");
+    printf("Selecciona el numero del embalse: ");
     if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalNombres) 
 	{
-        printf("Selección no válida.\n");
+        printf("Selección no valida.\n");
         while (getchar() != '\n');
         return;
     }
@@ -350,7 +350,7 @@ void Evolucion_de_agua_estancada(Embalse* embalses, int nEmbalses)
 
     char* embalseElegido = nombres[seleccion - 1];
 
-    printf("\n=== EVOLUCIÓN ANUAL DEL AGUA ESTANCADA PARA '%s' ===\n", embalseElegido);
+    printf("\n=== EVOLUCION ANUAL DEL AGUA ESTANCADA PARA '%s' ===\n", embalseElegido);
     int anios[10] = {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021};
     int volumenTotalPorAnio[10] = {0};
 
@@ -366,7 +366,7 @@ void Evolucion_de_agua_estancada(Embalse* embalses, int nEmbalses)
 
     for (int i = 0; i < 10; i++) 
 	{
-        printf("Año %d: %d hectómetros cúbicos\n", anios[i], volumenTotalPorAnio[i]);
+        printf("Anio %d: %d hectometros cubicos\n", anios[i], volumenTotalPorAnio[i]);
     }
 
     for (int i = 0; i < totalNombres; i++) free(nombres[i]);
@@ -425,7 +425,7 @@ void detectarAnomalias(Embalse* embalses, int nEmbalses, int nVolumenes) {
                 if (ant > 0) {
                     float diff = (act - ant) / (float)ant;
                     if (labs(diff) > UMBRAL) {
-                        printf("⚠ %s - %s (%s): %d → %d entre %d y %d (%.1f%%)\n",
+                        printf(" %s - %s (%s): del mes %d a %d entre %d y %d (%.1f%%)\n",
                             embalses[i].cuenca,
                             embalses[i].embalse,
                             embalses[i].mes,
@@ -531,7 +531,7 @@ void calcularModa(Embalse* embalses, int nEmbalses) {
             }
         }
 
-        printf("Moda del embalse '%s':\n", embalseElegido);
+        printf("Moda del embalse '%s':\n " , embalseElegido);
         for (int i = 0; i < nValores; i++) {
             if (frecuencias[i] == maxFrecuencia) {
                 printf("- %d hectometros cubicos (repetido %d veces)\n", valores[i], frecuencias[i]);
@@ -642,9 +642,9 @@ void Desviaciontipicaporcuenca(Embalse* embalses, int nEmbalses) {
     }
 
     int seleccion = 0;
-    printf("Selecciona el número de la cuenca para calcular la desviación típica: ");
+    printf("Selecciona el numero de la cuenca para calcular la desviación tipica: ");
     if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalCuencas) {
-        printf("Selección no válida.\n");
+        printf("Seleccion no valida.\n");
         while (getchar() != '\n');
         return;
     }
@@ -713,7 +713,7 @@ void sumarVolumenTotalPorEmbalse(Embalse* embalses, int nEmbalses) {
     int seleccion;
     printf("Selecciona el embalse: ");
     if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalEmbalses) {
-        printf("Selección no válida.\n");
+        printf("Seleccion no valida.\n");
         while (getchar() != '\n');
         return;
     }
@@ -730,7 +730,7 @@ void sumarVolumenTotalPorEmbalse(Embalse* embalses, int nEmbalses) {
         }
     }
 
-    printf("El volumen acumulado total del embalse '%s' es: %ld \n", embalseSeleccionado, sumaTotal);
+    printf("El volumen acumulado total del embalse '%s' es de: %ld hectometros cubicos\n", embalseSeleccionado, sumaTotal);
 
     for (int i = 0; i < totalEmbalses; i++) {
         free(nombresEmbalses[i]);
@@ -760,7 +760,7 @@ int main() {
     char nombreFichero[256];
     
     //Bienvenida al codigo
-    printf("¡ BIENVENIDO AL PROGRAMA DE ANALISIS DE DATOS DE MITECO ! ----> CuencaStast \n");
+    printf(" BIENVENIDO AL PROGRAMA DE ANALISIS DE DATOS DE MITECO ----> CuencaStast \n");
     printf("\n Hemos registrado los datos relativos a los volumenes de agua almacenada, en los embalses espanoles, agrupados por cuencas hidrograficas.\n");
     printf("\n Y a partir de este programa, creado por :\n ");
     printf("\n 1-Marcos Tejero Monedero \n");
@@ -768,26 +768,26 @@ int main() {
     printf("\n 3-Juan Moreno Aymerich \n");
     printf("\n 4-Manuel Lopez Romera \n");
     printf("\n Podras elegir diferentes opciones, para estudiar este conjunto de datos, de manera exacta y efectiva. \n");
-    printf(" \n ¿Estas listo? \n");
+    printf("\n Estas listo? \n");
     printf("\n \n Para ello, deberas de introducir el nombre del fichero CSV que le hemos proporcinado (dataset.csv): ");
     fgets(nombreFichero, sizeof(nombreFichero), stdin);
     nombreFichero[strcspn(nombreFichero, "\n")] = 0;
 
     embalses = cargarDatos(nombreFichero, &nEmbalses, &nVolumenes);
     if (!embalses) {
-        printf("No se pudo abrir el archivo o está vacio.\n");
+        printf("No se pudo abrir el archivo o esta vacio.\n");
         return 1;
     }
 
     printf("Archivo cargado correctamente (%d registros).\n", nEmbalses);
-    printf("\n -------¡BIENVENIDO!------ \n");
+    printf("\n -------BIENVENIDO------ \n");
    
 
     char continuar = 's';
     while (continuar == 's' || continuar == 'S') 
 	{
         int opcion;
-        printf("\n=== MENÚ DE OPCIONES ===\n");
+        printf("\n=== MENU DE OPCIONES ===\n");
         printf("1. Calcular media mensual por cuenca\n");
         printf("2. Calcular media anual por cuenca\n");
         printf("3. Calcular media (Anual o Mensual) por embalse\n");
@@ -849,4 +849,3 @@ int main() {
     printf("Programa finalizado.\n");
     return 0;
 }
-
