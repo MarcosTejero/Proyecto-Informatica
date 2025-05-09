@@ -553,12 +553,12 @@ void detectarAnomalias(Embalse* embalses, int nEmbalses, int nVolumenes)
 
     int opcion;
     printf("\n=== OPCIONES DISPONIBLES ===\n");
-    printf("1. Detectar abundancia hídrica\n");
-    printf("2. Detectar periodos de sequía\n");
-    printf("Seleccione una opción: ");
+    printf("1. Detectar abundancia hidrica\n");
+    printf("2. Detectar periodos de sequia\n");
+    printf("Seleccione una opcion: ");
     if (scanf("%d", &opcion) != 1 || (opcion != 1 && opcion != 2)) 
 	{
-        printf("Opción no válida.\n");
+        printf("Opcion no valida.\n");
         while (getchar() != '\n');
         for (int i = 0; i < totalEmbalses; i++) free(nombresEmbalses[i]);
         free(nombresEmbalses);
@@ -571,10 +571,10 @@ void detectarAnomalias(Embalse* embalses, int nEmbalses, int nVolumenes)
     }
 
     int seleccion;
-    printf("Selecciona el número del embalse: ");
+    printf("Selecciona el numero del embalse: ");
     if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalEmbalses) 
 	{
-        printf("Selección no válida.\n");
+        printf("Seleccion no valida.\n");
         while (getchar() != '\n');
         for (int i = 0; i < totalEmbalses; i++) free(nombresEmbalses[i]);
         free(nombresEmbalses);
@@ -828,7 +828,7 @@ void Desviaciontipicaporcuenca(Embalse* embalses, int nEmbalses)
     }
 
     int seleccion = 0;
-    printf("Selecciona el numero de la cuenca para calcular la desviación tipica: ");
+    printf("Selecciona el numero de la cuenca para calcular la desviacion tipica: ");
     if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalCuencas) 
 	{
         printf("Seleccion no valida.\n");
@@ -1057,4 +1057,3 @@ int main()
     printf("Programa finalizado.\n");
     return 0;
 }
-
