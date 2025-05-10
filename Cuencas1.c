@@ -1,9 +1,9 @@
+#include <graphics.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <locale.h>
 #include <math.h>
-
+#include <locale.h>
 
 typedef struct 
 {
@@ -957,7 +957,7 @@ void liberarDatos(Embalse* embalses, int nEmbalses)
     free(embalses);
 }
 
-void graficarEvolucionAnualPorEmbalse(Embalse* embalses, int nEmbalses) {
+void dibujarGraficoEmbalse(Embalse* embalses, int nEmbalses) {
     int capacidad = 10;
     int totalEmbalses = 0;
     char** nombres = (char**)malloc(capacidad * sizeof(char*));
@@ -984,8 +984,8 @@ void graficarEvolucionAnualPorEmbalse(Embalse* embalses, int nEmbalses) {
         printf("%d. %s\n", i + 1, nombres[i]);
     }
 
-    int seleccion;
-    printf("Selecciona el numero del embalse para graficar su evolucion anual: ");
+    int seleccion = 0;
+    printf("Selecciona el numero del embalse: ");
     if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalEmbalses) {
         printf("Seleccion no valida.\n");
         while (getchar() != '\n');
@@ -994,26 +994,58 @@ void graficarEvolucionAnualPorEmbalse(Embalse* embalses, int nEmbalses) {
     getchar();
 
     char* embalseElegido = nombres[seleccion - 1];
-    int anios[10] = {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021};
-    int volumenPorAnio[10] = {0};
+
+    int anios[10] = {2012,2013,2014,2015,2016,2017,2018,2019,2020,2021};
+    int datos[10] = {0};
 
     for (int i = 0; i < nEmbalses; i++) {
         if (strcmp(embalses[i].embalse, embalseElegido) == 0) {
             for (int j = 0; j < embalses[i].nVolumenes; j++) {
-                volumenPorAnio[j] += embalses[i].volumen[j];
+                datos[j] += embalses[i].volumen[j];
             }
         }
     }
+    
+    int gd = DETECT, gm;
+    initgraph(&gd, &gm, "");
 
-    printf("\n=== GRAFICO DE BARRAS PARA '%s' ===\n", embalseElegido);
+    int maxAltura = 300;
+    int baseY = 400;
+    int barWidth = 40;
+    int separacion = 20;
+    int inicioX = 100;
+
+    int maxValor = 0;
     for (int i = 0; i < 10; i++) {
-        printf("%d | ", anios[i]);
-        int altura = volumenPorAnio[i] / 100; // Escala: 1 bloque = 100 hm3
-        for (int j = 0; j < altura; j++) {
-            printf("#");
-        }
-        printf(" (%d hm3)\n", volumenPorAnio[i]);
+        if (datos[i] > maxValor) maxValor = datos[i];
     }
+
+    // Dibujar barras
+    for (int i = 0; i < 10; i++) {
+        int altura = (maxAltura * datos[i]) / maxValor;
+        int x1 = inicioX + i * (barWidth + separacion);
+        int y1 = baseY - altura;
+        int x2 = x1 + barWidth;
+        int y2 = baseY;
+
+        rectangle(x1, y1, x2, y2);
+        setfillstyle(SOLID_FILL, BLUE);
+        floodfill((x1 + x2)/2, (y1 + y2)/2, WHITE);
+
+        char etiqueta[10];
+        sprintf(etiqueta, "%d", anios[i]);
+        outtextxy(x1, baseY + 10, etiqueta);
+
+        char valor[20];
+        sprintf(valor, "%d", datos[i]);
+        outtextxy(x1, y1 - 20, valor);
+    }
+
+    outtextxy(100, 50, "Grafico anual del embalse:");
+    outtextxy(100, 70, embalseElegido);
+
+    getch();
+    closegraph();
 
     for (int i = 0; i < totalEmbalses; i++) free(nombres[i]);
     free(nombres);
@@ -1066,7 +1098,7 @@ int main()
         printf("7. Calcular desviacion tipica por embalse\n");
         printf("8. Calcular desviacion tipica por cuenca\n");
 	    printf("9. Volumen total acumulado por embalse\n");
-        printf("10. Graficar evolucion anual de un embalse\n");
+        printf("10. Mostrar grafico de barras del embalse\n");
         printf("11. Salir\n");
         printf("Selecciona una opcion: ");
         scanf("%d", &opcion);
@@ -1102,7 +1134,7 @@ int main()
 		        sumarVolumenTotalPorEmbalse(embalses, nEmbalses);
 		        break;
             case 10:
-                graficarEvolucionAnualPorEmbalse(embalses, nEmbalses);
+                dibujarGraficoEmbalse(embalses, nEmbalses);
                 break;
 	        case 11:
 		        liberarDatos(embalses, nEmbalses);
