@@ -29,18 +29,21 @@ int contarLineas(const char* nombreFichero)
     char buffer[1024];
     while (fgets(buffer, sizeof(buffer), f)) contador++;
     fclose(f);
-    return contador - 1; // restamos la cabecera
+    // Restamos la cabecera
+    return contador - 1; 
 }
 
 int contarVolumenes(const char* linea) 
 {
     int contador = 0;
     const char* p = linea;
-    while (*p) {
+    while (*p) 
+	{
         if (*p == ',') contador++;
         p++;
     }
-    return contador - 2; // quitamos cuenca, embalse, mes
+    // Quitamos cuenca, embalse, mes
+    return contador - 2; 
 }
 
 // Carga los datos desde el archivo CSV y los almacena dinámicamente en una lista de estructuras Embalse.
@@ -57,7 +60,8 @@ Embalse* cargarDatos(const char* nombreFichero, int* nEmbalses, int* nVolumenes)
     }
 
     char buffer[1024];
-    fgets(buffer, sizeof(buffer), f); // saltar cabecera
+    // Saltar cabecera
+    fgets(buffer, sizeof(buffer), f); 
     *nVolumenes = contarVolumenes(buffer);
 
     Embalse* embalses = (Embalse*)malloc(*nEmbalses * sizeof(Embalse));
@@ -82,7 +86,8 @@ Embalse* cargarDatos(const char* nombreFichero, int* nEmbalses, int* nVolumenes)
         embalses[i].volumen = (int*)malloc(*nVolumenes * sizeof(int));
         embalses[i].nVolumenes = *nVolumenes;
 
-        for (int j = 0; j < *nVolumenes; j++) {
+        for (int j = 0; j < *nVolumenes; j++) 
+		{
             token = strtok(NULL, ",");
             embalses[i].volumen[j] = token ? atoi(token) : 0;
         }
@@ -127,18 +132,21 @@ void calcularMediaMensualPorCuenca(Embalse* embalses, int nEmbalses)
 
     // Mostrar menú de cuencas
     printf("\n=== LISTA DE CUENCAS DISPONIBLES ===\n");
-    for (int i = 0; i < totalCuencas; i++) {
+    for (int i = 0; i < totalCuencas; i++) 
+	{
         printf("%d. %s\n", i + 1, cuencas[i]);
     }
 
     int seleccionCuenca;
     printf("Selecciona el numero de la cuenca: ");
-    if (scanf("%d", &seleccionCuenca) != 1 || seleccionCuenca < 1 || seleccionCuenca > totalCuencas) {
+    if (scanf("%d", &seleccionCuenca) != 1 || seleccionCuenca < 1 || seleccionCuenca > totalCuencas) 
+	{
         printf("Seleccion no valida.\n");
         while (getchar() != '\n');
         return;
     }
-    getchar(); // limpiar buffer
+    // Limpiar buffer
+    getchar();
 
     char* cuencaBuscada = cuencas[seleccionCuenca - 1];
 
@@ -150,7 +158,8 @@ void calcularMediaMensualPorCuenca(Embalse* embalses, int nEmbalses)
         while (getchar() != '\n');
         return;
     }
-    getchar(); // limpiar buffer
+    // Limpiar buffer
+    getchar(); 
 
     int suma = 0, contador = 0;
 
@@ -503,7 +512,7 @@ void detectarSequias(Embalse* embalses, int nEmbalses, int nVolumenes, char* emb
                     inicio = -1;
                 }
             }
-            // último periodo si terminó en el último año
+            // Último periodo si terminó en el último año
             if (conteo >= 2) 
 			{
                 printf(" %s - %s (%s): sequia de %d anios desde %d a %d\n",
@@ -568,7 +577,8 @@ void detectarAnomalias(Embalse* embalses, int nEmbalses, int nVolumenes)
     }
 
     printf("\n=== LISTA DE EMBALSES DISPONIBLES ===\n");
-    for (int i = 0; i < totalEmbalses; i++) {
+    for (int i = 0; i < totalEmbalses; i++) 
+	{
         printf("%d. %s\n", i + 1, nombresEmbalses[i]);
     }
 
@@ -582,7 +592,8 @@ void detectarAnomalias(Embalse* embalses, int nEmbalses, int nVolumenes)
         free(nombresEmbalses);
         return;
     }
-    getchar(); // limpiar buffer
+    // Limpiar buffer
+    getchar(); 
 
     char* embalseSeleccionado = nombresEmbalses[seleccion - 1];
 
@@ -741,7 +752,8 @@ void Desviaciontipica(Embalse* embalses, int nEmbalses)
     }
 
     printf("\n=== LISTA DE EMBALSES DISPONIBLES ===\n");
-    for (int i = 0; i < totalNombres; i++) {
+    for (int i = 0; i < totalNombres; i++)
+	{
         printf("%d. %s\n", i + 1, nombres[i]);
     }
 
@@ -965,16 +977,21 @@ void graficarEvolucionAnualPorEmbalse(Embalse* embalses, int nEmbalses) {
     int totalEmbalses = 0;
     char** nombres = (char**)malloc(capacidad * sizeof(char*));
 
-    for (int i = 0; i < nEmbalses; i++) {
+    for (int i = 0; i < nEmbalses; i++) 
+	{
         int existe = 0;
-        for (int j = 0; j < totalEmbalses; j++) {
-            if (strcmp(nombres[j], embalses[i].embalse) == 0) {
+        for (int j = 0; j < totalEmbalses; j++) 
+		{
+            if (strcmp(nombres[j], embalses[i].embalse) == 0) 
+			{
                 existe = 1;
                 break;
             }
         }
-        if (!existe) {
-            if (totalEmbalses == capacidad) {
+        if (!existe) 
+		{
+            if (totalEmbalses == capacidad)
+			{
                 capacidad *= 2;
                 nombres = (char**)realloc(nombres, capacidad * sizeof(char*));
             }
@@ -983,13 +1000,15 @@ void graficarEvolucionAnualPorEmbalse(Embalse* embalses, int nEmbalses) {
     }
 
     printf("\n=== LISTA DE EMBALSES DISPONIBLES ===\n");
-    for (int i = 0; i < totalEmbalses; i++) {
+    for (int i = 0; i < totalEmbalses; i++) 
+	{
         printf("%d. %s\n", i + 1, nombres[i]);
     }
 
     int seleccion;
     printf("Selecciona el numero del embalse para graficar su evolucion anual: ");
-    if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalEmbalses) {
+    if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalEmbalses) 
+	{
         printf("Seleccion no valida.\n");
         while (getchar() != '\n');
         return;
@@ -1001,11 +1020,15 @@ void graficarEvolucionAnualPorEmbalse(Embalse* embalses, int nEmbalses) {
     int volumenPorAnio[10] = {0};
     int maxValor = 0;
 
-    for (int i = 0; i < nEmbalses; i++) {
-        if (strcmp(embalses[i].embalse, embalseElegido) == 0) {
-            for (int j = 0; j < embalses[i].nVolumenes; j++) {
+    for (int i = 0; i < nEmbalses; i++) 
+	{
+        if (strcmp(embalses[i].embalse, embalseElegido) == 0) 
+		{
+            for (int j = 0; j < embalses[i].nVolumenes; j++) 
+			{
                 volumenPorAnio[j] += embalses[i].volumen[j];
-                if (volumenPorAnio[j] > maxValor) {
+                if (volumenPorAnio[j] > maxValor) 
+				{
                     maxValor = volumenPorAnio[j];
                 }
             }
@@ -1014,20 +1037,25 @@ void graficarEvolucionAnualPorEmbalse(Embalse* embalses, int nEmbalses) {
 
     // Determinar escala automáticamente
     int escala;
-    if (maxValor > 1000) {
+    if (maxValor > 1000) 
+	{
         escala = 100;
-    } else if (maxValor > 100) {
+    } else if (maxValor > 100) 
+	{
         escala = 50;
-    } else {
+    } else 
+	{
         escala = 10;
     }
 
     printf("\n=== GRAFICO DE BARRAS PARA '%s' ===\n", embalseElegido);
     printf(" Cada '#' representa %d hm3 \n", escala);
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) 
+	{
         printf("%d | ", anios[i]);
         int altura = volumenPorAnio[i] / escala;
-        for (int j = 0; j < altura; j++) {
+        for (int j = 0; j < altura; j++) 
+		{
             printf("#");
         }
         printf(" (%d hm3)\n", volumenPorAnio[i]);
@@ -1038,7 +1066,7 @@ void graficarEvolucionAnualPorEmbalse(Embalse* embalses, int nEmbalses) {
 }
 
 // Función principal del programa: carga los datos, muestra el menú y permite al usuario elegir análisis a realizar.
-int main() 
+int main(void) 
 {
     setlocale(LC_ALL, "Spanish");
 
@@ -1047,7 +1075,7 @@ int main()
     int nVolumenes = 0;
     char nombreFichero[256];
     
-    //Bienvenida al codigo
+    // Bienvenida al codigo
     printf(" BIENVENIDO AL PROGRAMA DE ANALISIS DE DATOS DE MITECO ----> CuencaStast \n");
     printf("\n Hemos registrado los datos relativos a los volumenes de agua almacenada, en los embalses espanoles, agrupados por cuencas hidrograficas.\n");
     printf("\n Y a partir de este programa, creado por :\n ");
@@ -1096,38 +1124,49 @@ int main()
             case 1:
                 calcularMediaMensualPorCuenca(embalses, nEmbalses);
                 break;
+                
             case 2:
                 calcularMediaAnualPorCuenca(embalses, nEmbalses);
                 break;
+                
             case 3:
                 calcularMediaPorEmbalse(embalses, nEmbalses);
                 break;
+                
             case 4:
                 Evolucion_de_agua_estancada(embalses, nEmbalses);
                 break;
+                
             case 5:
             	detectarAnomalias(embalses, nEmbalses, nVolumenes);
             	break;
+            	
 	        case 6:
 		        calcularModa(embalses, nEmbalses);
 	       	    break;
+	       	    
             case 7:
                 Desviaciontipica(embalses, nEmbalses);
                 break;
+                
             case 8:
 		        Desviaciontipicaporcuenca(embalses, nEmbalses);
 		        break;
+		        
             case 9:
 		        sumarVolumenTotalPorEmbalse(embalses, nEmbalses);
 		        break;
+		        
             case 10:
                 graficarEvolucionAnualPorEmbalse(embalses, nEmbalses);
                 break;
+                
 	        case 11:
 		        liberarDatos(embalses, nEmbalses);
                 printf("Programa finalizado.\n");
                 system("pause");
                 return 0;
+                
             default:
                 printf("Opcion no valida.\n");
         }
