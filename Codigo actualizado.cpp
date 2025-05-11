@@ -957,6 +957,68 @@ void liberarDatos(Embalse* embalses, int nEmbalses)
     free(embalses);
 }
 
+void graficarEvolucionAnualPorEmbalse(Embalse* embalses, int nEmbalses) {
+    int capacidad = 10;
+    int totalEmbalses = 0;
+    char** nombres = (char**)malloc(capacidad * sizeof(char*));
+
+    for (int i = 0; i < nEmbalses; i++) {
+        int existe = 0;
+        for (int j = 0; j < totalEmbalses; j++) {
+            if (strcmp(nombres[j], embalses[i].embalse) == 0) {
+                existe = 1;
+                break;
+            }
+        }
+        if (!existe) {
+            if (totalEmbalses == capacidad) {
+                capacidad *= 2;
+                nombres = (char**)realloc(nombres, capacidad * sizeof(char*));
+            }
+            nombres[totalEmbalses++] = strdup(embalses[i].embalse);
+        }
+    }
+
+    printf("\n=== LISTA DE EMBALSES DISPONIBLES ===\n");
+    for (int i = 0; i < totalEmbalses; i++) {
+        printf("%d. %s\n", i + 1, nombres[i]);
+    }
+
+    int seleccion;
+    printf("Selecciona el numero del embalse para graficar su evolucion anual: ");
+    if (scanf("%d", &seleccion) != 1 || seleccion < 1 || seleccion > totalEmbalses) {
+        printf("Seleccion no valida.\n");
+        while (getchar() != '\n');
+        return;
+    }
+    getchar();
+
+    char* embalseElegido = nombres[seleccion - 1];
+    int anios[10] = {2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021};
+    int volumenPorAnio[10] = {0};
+
+    for (int i = 0; i < nEmbalses; i++) {
+        if (strcmp(embalses[i].embalse, embalseElegido) == 0) {
+            for (int j = 0; j < embalses[i].nVolumenes; j++) {
+                volumenPorAnio[j] += embalses[i].volumen[j];
+            }
+        }
+    }
+
+    printf("\n=== GRAFICO DE BARRAS PARA '%s' ===\n", embalseElegido);
+    for (int i = 0; i < 10; i++) {
+        printf("%d | ", anios[i]);
+        int altura = volumenPorAnio[i] / 100; // Escala: 1 bloque = 100 hm3
+        for (int j = 0; j < altura; j++) {
+            printf("#");
+        }
+        printf(" (%d hm3)\n", volumenPorAnio[i]);
+    }
+
+    for (int i = 0; i < totalEmbalses; i++) free(nombres[i]);
+    free(nombres);
+}
+
 int main() 
 {
     setlocale(LC_ALL, "Spanish");
@@ -989,7 +1051,6 @@ int main()
 
     printf("Archivo cargado correctamente (%d registros).\n", nEmbalses);
     printf("\n -------BIENVENIDO------ \n");
-   
 
     char continuar = 's';
     while (continuar == 's' || continuar == 'S') 
@@ -1005,7 +1066,8 @@ int main()
         printf("7. Calcular desviacion tipica por embalse\n");
         printf("8. Calcular desviacion tipica por cuenca\n");
 	    printf("9. Volumen total acumulado por embalse\n");
-        printf("10. Salir\n");
+        printf("10. Graficar evolucion anual de un embalse\n");
+        printf("11. Salir\n");
         printf("Selecciona una opcion: ");
         scanf("%d", &opcion);
         getchar();
@@ -1029,7 +1091,7 @@ int main()
             	break;
 	        case 6:
 		        calcularModa(embalses, nEmbalses);
-	      	    break;
+	       	    break;
             case 7:
                 Desviaciontipica(embalses, nEmbalses);
                 break;
@@ -1039,7 +1101,10 @@ int main()
             case 9:
 		        sumarVolumenTotalPorEmbalse(embalses, nEmbalses);
 		        break;
-	        case 10:
+            case 10:
+                graficarEvolucionAnualPorEmbalse(embalses, nEmbalses);
+                break;
+	        case 11:
 		        liberarDatos(embalses, nEmbalses);
                 printf("Programa finalizado.\n");
                 system("pause");
