@@ -1006,6 +1006,7 @@ void graficarEvolucionAnualPorEmbalse(Embalse* embalses, int nEmbalses) {
     }
 
     printf("\n=== GRAFICO DE BARRAS PARA '%s' ===\n", embalseElegido);
+    printf(" Cada '#' representa 100 hm3 \n");
     for (int i = 0; i < 10; i++) {
         printf("%d | ", anios[i]);
         int altura = volumenPorAnio[i] / 100; // Escala: 1 bloque = 100 hm3
